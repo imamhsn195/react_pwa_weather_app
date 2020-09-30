@@ -4,24 +4,28 @@ import { fetchWeather } from './api/fetchWeather';
 const App = () => {
     const [query, setQuery] = useState('');
     const [weather, setWeather] = useState({});
+    const [error, setError] = useState({});
 
     const search = async(e)=>{
-        if(e.key === 'Enter'){
-            const data = await fetchWeather(query);
-            setWeather(data)
+        if(e.key === 'Enter' && query !== ""){
+            const data = await fetchWeather(query)
+            if(data && data.cod === 200){
+                setWeather(data)   
+            }
             setQuery('')
         }
     }
 
-    return(
+    return( 
     <div className="weather-container">
-        <h1>Welcome to React Pwa</h1>
-        <input className="search" placeholder="Search..." 
+        <h1>Welcome to React+Pwa Weather finder App</h1>
+        <input className="search" placeholder="Search with city name..." 
         value={query} 
         onChange={(e) => (setQuery(e.target.value))}
         onKeyPress={search}
         />
-        {
+        {/* { query && <span>{weather.message}</span>} */}
+        {   
             weather.main && (
                 <div>
                     <h1 className="city-name">
@@ -36,7 +40,7 @@ const App = () => {
                         <div>{weather.weather[0].description.toUpperCase()}</div>
                     </div>
                 </div>
-            )
+            ) 
         }
     </div>
     ); 
